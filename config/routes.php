@@ -1,6 +1,6 @@
 <?php
 
-return function ($request) {
+return function ($request, $container) {
     $serverParams = $request->getServerParams();
 
     $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
@@ -28,8 +28,12 @@ return function ($request) {
         case FastRoute\Dispatcher::FOUND:
             $handler = $routeInfo[1];
             $vars = $routeInfo[2];
-    
-            $response = call_user_func(new $handler);
+            
+            foreach ($vars as $key => $value) {
+                $request = $request->withAttribute($key, $value);
+            }
+
+            $response = call_user_func($container->get($handler), $request);
             break;
     }
 

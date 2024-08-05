@@ -1,6 +1,7 @@
 <?php
 
 require 'vendor/autoload.php';
+require 'config/container.php';
 require 'helper/emitter.php';
 
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
@@ -14,6 +15,6 @@ $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/config');
 $dotenv->load();
 
-$response = (require 'config/routes.php')($request);
+$response = (require 'config/routes.php')($request, $container);
 
 emit($response);
