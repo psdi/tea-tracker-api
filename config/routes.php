@@ -4,7 +4,14 @@ return function ($request, $container) {
     $serverParams = $request->getServerParams();
 
     $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
-        $r->addRoute('GET', '/teas[/{id:\d+}]', TeaTracker\Handler\SelectTeasHandler::class);
+        $r->addRoute(
+            'GET',
+            '/teas[/{id:\d+}]',
+            [
+                TeaTracker\Controller\TeaController::class,
+                'select'
+            ]
+        );
     });
     
     $httpMethod = $serverParams['REQUEST_METHOD'];
@@ -26,14 +33,18 @@ return function ($request, $container) {
             // ... 405 Method Not Allowed
             break;
         case FastRoute\Dispatcher::FOUND:
-            $handler = $routeInfo[1];
+            $handler = $routeInfo[1][0];
+            $method = $routeInfo[1][1];
             $vars = $routeInfo[2];
             
             foreach ($vars as $key => $value) {
                 $request = $request->withAttribute($key, $value);
             }
 
-            $response = call_user_func($container->get($handler), $request);
+            $controller = $container->get($handler);
+            $controller->setRequest($request);
+
+            $response = call_user_func([$controller, $method], $request);
             break;
     }
 

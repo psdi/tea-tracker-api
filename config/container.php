@@ -1,10 +1,10 @@
 <?php
 
-use TeaTracker\Factory\SelectTeasHandlerFactory;
-use TeaTracker\Factory\TeaServiceFactory;
-use TeaTracker\Handler\SelectTeasHandler;
+use TeaTracker\Controller\TeaController;
+use TeaTracker\Factory\TeaControllerFactory;
+use TeaTracker\Factory\TeaMapperFactory;
+use TeaTracker\Mapper\TeaMapper;
 use TeaTracker\PdoFactory;
-use TeaTracker\Service\TeaService;
 
 $builder = new DI\ContainerBuilder();
 
@@ -12,10 +12,11 @@ $builder->addDefinitions(
     [
         \PDO::class => DI\factory(PdoFactory::class),
 
-        TeaService::class => DI\factory(TeaServiceFactory::class),
+        TeaMapper::class => DI\factory(TeaMapperFactory::class),
 
-        SelectTeasHandler::class => DI\factory(SelectTeasHandlerFactory::class),
+        TeaController::class => DI\factory(TeaControllerFactory::class),
     ]
 );
 
 $container = $builder->build();
+

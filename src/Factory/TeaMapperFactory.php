@@ -4,14 +4,14 @@ namespace TeaTracker\Factory;
 
 use PDO;
 use Psr\Container\ContainerInterface;
-use TeaTracker\Service\TeaService;
+use TeaTracker\Mapper\TeaMapper;
 
-class TeaServiceFactory
+class TeaMapperFactory
 {
     public function __invoke(ContainerInterface $container)
     {
         $pdo = $container->get(PDO::class);
 
-        return new TeaService($pdo);
+        return new TeaMapper($pdo);
     }
 }
