@@ -15,11 +15,29 @@ class TeaController extends Controller
     public function select()
     {
         $id = $this->request->getAttribute('id');
-        $page = $this->request->getAttribute('page');
-        
-        $data = $this->teaMapper->fetchAll();
+        $queryParams = $this->request->getQueryParams();
+    
+        $page = $queryParams['page'] ?? null;
+        if (!is_null($page) && is_numeric($page)) {
+            $page = (int) $page;
+            unset($queryParams['page']);
+        }
+
+        $data = [];
+
+        $data = match (true) {
+            !is_null($id) => $this->teaMapper->fetchById($id),
+            !is_null($page) => $this->teaMapper->fetchPerPage($page),
+            //count($queryParams) => $this->teaMapper->fetchByParam(),
+            default => $this->teaMapper->fetchAll(),
+        };
 
         return new JsonResponse($data);
+    }
+
+    public function insert($data)
+    {
+        // todo
     }
 }
 
