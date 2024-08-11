@@ -16,6 +16,7 @@ class Sanitizer
 
     /**
      * Filter a parameter value using given settings in configuration files
+     * The `$name` is to be formatted as such: "{route}.{parameter}"
      * 
      * @param string $name Name of the parameter to be filtered
      * @param mixed $value Value of parameter
@@ -24,7 +25,11 @@ class Sanitizer
      */
     public function filter(string $name, mixed $value)
     {
-        list($route, $paramName) = explode('.', $name, 2);
+        $route = '';
+        $paramName = $name;
+        if (strpos($name, '.') !== false) {
+            list($route, $paramName) = explode('.', $name, 2);
+        }
 
         // Is parameter generally valid or is route-param constellation allowed?
         $config = [];
@@ -41,7 +46,7 @@ class Sanitizer
             return false;
         }
 
-        return filter_var($value, $config['filter'], $config['options']);
+        return filter_var($value, $config['filter'], $config['options'] ?? []);
     }
 }
 

@@ -5,13 +5,15 @@ namespace TeaTracker\Factory;
 use Psr\Container\ContainerInterface;
 use TeaTracker\Controller\TeaController;
 use TeaTracker\Mapper\TeaMapper;
+use TeaTracker\Sanitizer;
 
 class TeaControllerFactory
 {
     public function __invoke(ContainerInterface $container)
     {
-        $service = $container->get(TeaMapper::class);
+        $mapper = $container->get(TeaMapper::class);
+        $sanitizer = $container->get(Sanitizer::class);
 
-        return new TeaController($service);
+        return new TeaController($mapper, $sanitizer);
     }
 }

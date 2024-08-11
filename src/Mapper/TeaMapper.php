@@ -53,10 +53,16 @@ EOT;
 
     public function fetchById($id)
     {
-        // todo
+        $query = self::BASE_QUERY . ' WHERE t.id = :id';
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function fetchWithParams($params)
+    public function fetchByParams($params = [])
     {
         // todo
     }
