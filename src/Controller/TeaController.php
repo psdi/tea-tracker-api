@@ -29,6 +29,12 @@ class TeaController extends Controller
             unset($queryParams['page']);
         }
 
+        $sortOrder = $queryParams['sort_by'] ?? null;
+        if (isset($sortOrder)) {
+            $sortOrder = $this->sanitizer->filter('sort_by', $sortOrder);
+            unset($queryParams['sort_by']);
+        }
+
         $queryParams = array_filter(
             $queryParams,
             function ($value, $key) {
@@ -38,18 +44,30 @@ class TeaController extends Controller
         );
 
         $data = match (true) {
-            !is_null($id) => $this->teaMapper->fetchById($id),
-            !is_null($page) => $this->teaMapper->fetchPerPage($page),
-            count($queryParams) => $this->teaMapper->fetchByParams($queryParams),
-            default => $this->teaMapper->fetchAll(),
+            isset($id) => $this->teaMapper->fetchById($id),
+            isset($page) || (bool) count($queryParams) =>
+                $this->teaMapper->fetchByParams(
+                    params: $queryParams,
+                    sortOrder: $sortOrder,
+                    page: $page,
+                ),
+            default => $this->teaMapper->fetchAll($sortOrder),
         };
 
         return new JsonResponse($data);
     }
 
-    public function insert($data)
+    public function insert()
     {
-        // todo
+        $data = json_decode($this->request->getBody()->getContents(), true);
+
+        return new JsonResponse(
+            [],
+            201,
+            [
+                'Location: /teas/id',
+            ]
+        );
     }
 }
 

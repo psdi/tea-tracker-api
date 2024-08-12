@@ -12,6 +12,15 @@ return function ($request, $container) {
                 'select'
             ]
         );
+
+        $r->addRoute(
+            'POST',
+            '/teas',
+            [
+                TeaTracker\Controller\TeaController::class,
+                'insert'
+            ]
+        );
     });
     
     $httpMethod = $serverParams['REQUEST_METHOD'];

@@ -8,7 +8,7 @@ return [
                 'options' => [],
             ],
             'id' => [
-                'filter' => FILTER_SANITIZE_NUMBER_INT,
+                'filter' => FILTER_VALIDATE_INT,
                 'options' => [
                     'default' => -999,
                 ],
@@ -20,19 +20,28 @@ return [
                         return in_array(strtolower($str), ['asc', 'desc'])
                             ? strtolower($str)
                             : false;
-                    }
+                    },
                 ],
             ],
         ],
         'tea' => [
             'order_id' => [
-                'filter' => FILTER_DEFAULT,
+                'filter' => FILTER_VALIDATE_INT,
+                'options' => [
+                    'default' => 0,
+                ],
             ],
             'type_id' => [
-                'filter' => FILTER_DEFAULT,
+                'filter' => FILTER_VALIDATE_INT,
+                'options' => [
+                    'default' => 0,
+                ],
             ],
-            'name_id' => [
-                'filter' => FILTER_DEFAULT,
+            'vendor_id' => [
+                'filter' => FILTER_VALIDATE_INT,
+                'options' => [
+                    'default' => 0,
+                ],
             ],
         ],
     ],
